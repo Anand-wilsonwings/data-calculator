@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <section class="calculator">
+        <div class="container">
+            <h1>DATA CALCULATOR</h1>
+            <form action="" class="form">
+                <div class="input_box">
+                    <label for="areaInput">Enter the area to cover (km<sup>2</sup>)</label>
+                    <input type="text" id="areaInput" placeholder="Enter area of cover (km2)">
+                </div>
+                <div class="input_box">
+                    <label for="customersInput">Customers to serve</label>
+                    <input type="text" id="customersInput" placeholder="Enter Customers to serve">
+                </div>
+                <div class="input_box">
+                    <label for="usageInput">Average data usage (GB per customer per month)</label>
+                    <input type="text" id="usageInput" placeholder="Average data usage in GB">
+                </div>
+                <div class="submit_box">
+                    <button class="submit" type="button" onclick="calculate()">SUBMIT</button>
+                </div>
+            </form>
+            <br>
+
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Specification</th>
+                            <th>Standard antenna</th>
+                            <th>RI antenna</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Number of sites</td>
+                            <td id="numberOfSites">0</td>
+                            <td id="numberOfSitesRI">0</td>
+                        </tr>
+                        <tr>
+                            <td>Number of RRHs</td>
+                            <td id="rrhsForStandardAntenna">0</td>
+                            <td id="rrhsForRIAntenna">0</td>
+                        </tr>
+                        <tr>
+                            <td>Cost per GB /month /cust over 10 years</td>
+                            <td id="costPerGB">$0.00</td>
+                            <td id="costPerGBRI">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>CAPEX (towers and antennas)</td>
+                            <td id="capexStandardAntenna">$0.00</td>
+                            <td id="capexRIAntenna">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Cost for RRH</td>
+                            <td id="costForRRHStandard">$0.00</td>
+                            <td id="costForRRHRI">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Total CAPEX</td>
+                            <td id="totalCapexStandardAntenna">$0.00</td>
+                            <td id="totalCapexRIAntenna">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>CAPEX per Customer</td>
+                            <td id="capexPerCustomer">$0.00</td>
+                            <td id="capexPerCustomerRI">$0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function calculate() {
+            // Get input values
+            const areaToCover = parseFloat(document.getElementById('areaInput').value);
+            const totalCustomers = parseFloat(document.getElementById('customersInput').value);
+            const averageDataUsage = parseFloat(document.getElementById('usageInput').value);
+
+            // Calculate Number of Sites Required
+            const coverageAreaOfOneSite = 25.8; // You can change this value
+            const numberOfSites = Math.ceil(areaToCover / coverageAreaOfOneSite);
+
+            // Calculate Number of RRHs Required
+            const rrhFactor = 5; // You can change this value
+            const rrhsForStandardAntenna = numberOfSites * rrhFactor;
+            const rrhsForRIAntenna = numberOfSites;
+
+            // Calculate Cost per GB per Month per Customer over 10 Years
+            const totalCAPEXStandard = 1200000; // Actual CAPEX for Standard Antenna
+            const totalCAPERI = 1500000; // Actual CAPEX for RI Antenna
+            const costPerGBStandard = (totalCAPEXStandard / (averageDataUsage * 12 * 10 * totalCustomers)).toFixed(2);
+            const costPerGBRI = (totalCAPERI / (averageDataUsage * 12 * 10 * totalCustomers)).toFixed(2);
+
+            // Calculate CAPEX (towers and antennas)
+            const capexPerSiteStandard = 10000; // You can change this value
+            const capexPerSiteRI = 8000; // You can change this value
+            const capexStandardAntenna = numberOfSites * capexPerSiteStandard;
+            const capexRIAntenna = numberOfSites * capexPerSiteRI;
+
+            // Calculate Cost for RRH
+            const costForRRHStandard = (rrhsForStandardAntenna * (capexPerSiteStandard / rrhFactor)).toFixed(2);
+            const costForRRHRI = (rrhsForRIAntenna * (capexPerSiteRI / rrhFactor)).toFixed(2);
+
+            // Calculate Total CAPEX
+            const totalCapexStandardAntenna = (capexStandardAntenna + (rrhsForStandardAntenna * (capexPerSiteStandard / rrhFactor))).toFixed(2);
+            const totalCapexRIAntenna = (capexRIAntenna + (rrhsForRIAntenna * (capexPerSiteRI / rrhFactor))).toFixed(2);
+
+            // Calculate CAPEX per Customer
+            const capexPerCustomer = (totalCapexStandardAntenna / totalCustomers).toFixed(2);
+            const capexPerCustomerRI = (totalCapexRIAntenna / totalCustomers).toFixed(2);
+
+            // Update the table with calculated values
+            document.getElementById('numberOfSites').textContent = numberOfSites;
+            document.getElementById('numberOfSitesRI').textContent = numberOfSites;
+            document.getElementById('rrhsForStandardAntenna').textContent = rrhsForStandardAntenna;
+            document.getElementById('rrhsForRIAntenna').textContent = rrhsForRIAntenna;
+            document.getElementById('costPerGB').textContent = `$${costPerGBStandard}`;
+            document.getElementById('costPerGBRI').textContent = `$${costPerGBRI}`;
+            document.getElementById('capexStandardAntenna').textContent = `$${capexStandardAntenna}`;
+            document.getElementById('capexRIAntenna').textContent = `$${capexRIAntenna}`;
+            document.getElementById('costForRRHStandard').textContent = `$${costForRRHStandard}`;
+            document.getElementById('costForRRHRI').textContent = `$${costForRRHRI}`;
+            document.getElementById('totalCapexStandardAntenna').textContent = `$${totalCapexStandardAntenna}`;
+            document.getElementById('totalCapexRIAntenna').textContent = `$${totalCapexRIAntenna}`;
+            document.getElementById('capexPerCustomer').textContent = `$${capexPerCustomer}`;
+            document.getElementById('capexPerCustomerRI').textContent = `$${capexPerCustomerRI}`;
+        }
+    </script>
+</body>
+</html>

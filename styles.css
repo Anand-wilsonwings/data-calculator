@@ -1,0 +1,163 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.calculator .container{
+    max-width: 1140px;
+    margin: auto;
+    padding: 20px;
+}
+
+.calculator h1{
+    font-size: 22px;
+    font-weight: 600;
+    color: #404040;
+    font-family: sans-serif;
+    margin: 0;
+}
+
+.form{
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form .input_box{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form .input_box label{
+    font-size: 16px;
+    font-weight: 400;
+    color: #4d4d4d;
+    font-family: sans-serif;
+    margin: 0;
+}
+
+.form .input_box input{
+    width: 400px;
+    outline: none;
+    border: 1px solid #4d4d4d;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #4d4d4d;
+    padding: 8px 16px;
+}
+
+.submit_box .submit{
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 8px 32px;
+    border-radius: 8px;
+    background-color: green;
+    border: 1px solid green;
+    outline: none;
+    cursor: pointer;
+}
+
+.ri_sec{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.ri_box{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+}
+
+.ri_box h1{
+    font-size: 22px;
+    font-weight: 400;
+    color: #4d4d4d;
+    font-family: sans-serif;
+    margin: 0;
+}
+
+.ri_box h3{
+    font-size: 16px;
+    font-weight: 400;
+    color: #4d4d4d;
+    font-family: sans-serif;
+    margin: 0;
+}
+
+.table{
+    margin-top: 20px;
+}
+
+table{
+    border: 1px solid #4d4d4d;
+    border-spacing: 0;
+}
+
+thead tr th{
+    font-size: 18px;
+    font-weight: 600;
+    color: #4d4d4d;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 8px 20px;
+    text-align: left;
+}
+
+tbody tr td{
+    font-size: 16px;
+    font-weight: 400;
+    color: #4d4d4d;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 8px 20px;
+    text-align: left;
+}
+
+
+
+@media (max-width: 769px){
+
+    .form .input_box input{
+        width: auto;
+    }
+
+    .ri_sec{
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .calculator h1{
+        font-size: 20px;
+    }
+
+    .ri_box{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        text-align: left;
+    }
+
+    thead tr th{
+        font-size: 15px;
+        font-weight: 600;
+        padding: 4px 10px;
+    }
+    
+    tbody tr td{
+        font-size: 13px;
+        padding: 4px 10px;
+    }
+    
+
+
+}
