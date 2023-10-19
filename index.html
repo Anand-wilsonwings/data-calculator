@@ -82,61 +82,76 @@
     </section>
 
     <script>
-        function calculate() {
-            // Get input values
-            const areaToCover = parseFloat(document.getElementById('areaInput').value);
-            const totalCustomers = parseFloat(document.getElementById('customersInput').value);
-            const averageDataUsage = parseFloat(document.getElementById('usageInput').value);
+      function calculate() {
+    // Get input values
+    const areaToCover = parseFloat(document.getElementById('areaInput').value);
+    const totalCustomers = parseFloat(document.getElementById('customersInput').value);
+    const averageDataUsage = parseFloat(document.getElementById('usageInput').value);
 
-            // Calculate Number of Sites Required
-            const coverageAreaOfOneSite = 25.8; // You can change this value
-            const numberOfSites = Math.ceil(areaToCover / coverageAreaOfOneSite);
+    // Error handling for invalid inputs
+    if (isNaN(areaToCover) || isNaN(totalCustomers) || isNaN(averageDataUsage)) {
+        alert("Please enter valid input values.");
+        return;
+    }
 
-            // Calculate Number of RRHs Required
-            const rrhFactor = 5; // You can change this value
-            const rrhsForStandardAntenna = numberOfSites * rrhFactor;
-            const rrhsForRIAntenna = numberOfSites;
+    // Calculate Number of Sites Required for Standard Antenna
+    const coverageAreaOfOneSiteStandard = 35;
+    const numberOfSitesStandard = Math.ceil(areaToCover / coverageAreaOfOneSiteStandard);
 
-            // Calculate Cost per GB per Month per Customer over 10 Years
-            const totalCAPEXStandard = 1200000; // Actual CAPEX for Standard Antenna
-            const totalCAPERI = 1500000; // Actual CAPEX for RI Antenna
-            const costPerGBStandard = (totalCAPEXStandard / (averageDataUsage * 12 * 10 * totalCustomers)).toFixed(2);
-            const costPerGBRI = (totalCAPERI / (averageDataUsage * 12 * 10 * totalCustomers)).toFixed(2);
+    // Using the provided coverage for RI Antenna
+    const coverageAreaOfOneSiteRI = 800;
+    const numberOfSitesRI = Math.ceil(areaToCover / coverageAreaOfOneSiteRI);
 
-            // Calculate CAPEX (towers and antennas)
-            const capexPerSiteStandard = 10000; // You can change this value
-            const capexPerSiteRI = 8000; // You can change this value
-            const capexStandardAntenna = numberOfSites * capexPerSiteStandard;
-            const capexRIAntenna = numberOfSites * capexPerSiteRI;
+    // Calculate Number of RRHs Required
+    const rrhFactor = 5;
+    const rrhsForStandardAntenna = numberOfSitesStandard * rrhFactor;
+    const rrhsForRIAntenna = numberOfSitesRI; // Assuming 1 RRH per site for RI
 
-            // Calculate Cost for RRH
-            const costForRRHStandard = (rrhsForStandardAntenna * (capexPerSiteStandard / rrhFactor)).toFixed(2);
-            const costForRRHRI = (rrhsForRIAntenna * (capexPerSiteRI / rrhFactor)).toFixed(2);
+    // Calculate Cost per GB per Month per Customer over 10 Years
+    const totalCAPEXStandard = 1200000;
+    const totalCAPERI = 1500000;
+    const totalDataUsageOver10Years = averageDataUsage * 12 * 10 * totalCustomers;
+    const costPerGBStandard = (totalCAPEXStandard / totalDataUsageOver10Years).toFixed(5);
+    const costPerGBRI = (totalCAPERI / totalDataUsageOver10Years).toFixed(5);
 
-            // Calculate Total CAPEX
-            const totalCapexStandardAntenna = (capexStandardAntenna + (rrhsForStandardAntenna * (capexPerSiteStandard / rrhFactor))).toFixed(2);
-            const totalCapexRIAntenna = (capexRIAntenna + (rrhsForRIAntenna * (capexPerSiteRI / rrhFactor))).toFixed(2);
+    // Calculate CAPEX (towers and antennas)
+    const capexPerSiteStandard = 10000;
+    const capexPerSiteRI = 8000;
+    const capexStandardAntenna = numberOfSitesStandard * capexPerSiteStandard;
+    const capexRIAntenna = numberOfSitesRI * capexPerSiteRI;
 
-            // Calculate CAPEX per Customer
-            const capexPerCustomer = (totalCapexStandardAntenna / totalCustomers).toFixed(2);
-            const capexPerCustomerRI = (totalCapexRIAntenna / totalCustomers).toFixed(2);
+    // Calculate Cost for RRH
+    const costPerRRH = 2000; // Assuming a cost of $2000 per RRH
+    const costForRRHStandard = rrhsForStandardAntenna * costPerRRH;
+    const costForRRHRI = rrhsForRIAntenna * costPerRRH;
 
-            // Update the table with calculated values
-            document.getElementById('numberOfSites').textContent = numberOfSites;
-            document.getElementById('numberOfSitesRI').textContent = numberOfSites;
-            document.getElementById('rrhsForStandardAntenna').textContent = rrhsForStandardAntenna;
-            document.getElementById('rrhsForRIAntenna').textContent = rrhsForRIAntenna;
-            document.getElementById('costPerGB').textContent = `$${costPerGBStandard}`;
-            document.getElementById('costPerGBRI').textContent = `$${costPerGBRI}`;
-            document.getElementById('capexStandardAntenna').textContent = `$${capexStandardAntenna}`;
-            document.getElementById('capexRIAntenna').textContent = `$${capexRIAntenna}`;
-            document.getElementById('costForRRHStandard').textContent = `$${costForRRHStandard}`;
-            document.getElementById('costForRRHRI').textContent = `$${costForRRHRI}`;
-            document.getElementById('totalCapexStandardAntenna').textContent = `$${totalCapexStandardAntenna}`;
-            document.getElementById('totalCapexRIAntenna').textContent = `$${totalCapexRIAntenna}`;
-            document.getElementById('capexPerCustomer').textContent = `$${capexPerCustomer}`;
-            document.getElementById('capexPerCustomerRI').textContent = `$${capexPerCustomerRI}`;
-        }
+    // Calculate Total CAPEX
+    const totalCapexStandardAntenna = (capexStandardAntenna + costForRRHStandard).toFixed(2);
+    const totalCapexRIAntenna = (capexRIAntenna + costForRRHRI).toFixed(2);
+
+    // Calculate CAPEX per Customer
+    const capexPerCustomerStandard = (totalCapexStandardAntenna / totalCustomers).toFixed(2);
+    const capexPerCustomerRI = (totalCapexRIAntenna / totalCustomers).toFixed(2);
+
+    // Update the table with calculated values
+    document.getElementById('numberOfSites').textContent = numberOfSitesStandard;
+    document.getElementById('numberOfSitesRI').textContent = numberOfSitesRI;
+    document.getElementById('rrhsForStandardAntenna').textContent = rrhsForStandardAntenna;
+    document.getElementById('rrhsForRIAntenna').textContent = rrhsForRIAntenna;
+    document.getElementById('costPerGB').textContent = `$${costPerGBStandard}`;
+    document.getElementById('costPerGBRI').textContent = `$${costPerGBRI}`;
+    document.getElementById('capexStandardAntenna').textContent = `$${capexStandardAntenna}`;
+    document.getElementById('capexRIAntenna').textContent = `$${capexRIAntenna}`;
+    document.getElementById('costForRRHStandard').textContent = `$${costForRRHStandard}`;
+    document.getElementById('costForRRHRI').textContent = `$${costForRRHRI}`;
+    document.getElementById('totalCapexStandardAntenna').textContent = `$${totalCapexStandardAntenna}`;
+    document.getElementById('totalCapexRIAntenna').textContent = `$${totalCapexRIAntenna}`;
+    document.getElementById('capexPerCustomer').textContent = `$${capexPerCustomerStandard}`;
+    document.getElementById('capexPerCustomerRI').textContent = `$${capexPerCustomerRI}`;
+}
+
+
+
     </script>
 </body>
 </html>
